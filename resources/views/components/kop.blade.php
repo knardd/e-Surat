@@ -1,7 +1,7 @@
 <table width="100%">
     <tr>
         <td width="15%" align="center">
-            <img src="{{ asset{{ storage/Logo.png }} }}" width="80">
+            <img src="{{ public_path('storage/Logo.png') }}" width="80">
         </td>
         <td align="center">
             <strong>

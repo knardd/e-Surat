@@ -7,8 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>SIlahkan Mengisi Data Diri Sesuai dengan kk/ktp</h1>
-    <form action="" method="post">
+    <form action="">
         
     </form>
 </body>
