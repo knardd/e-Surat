@@ -6,9 +6,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [SuratController::class, 'pilih'])->name('surat.pilih');
-Route::get('/surat/form/{id}', [SuratController::class, 'form'])->name('surat.form');
+Route::get('/surat/form/{jenis:slug}', [SuratController::class, 'form'])->name('surat.form');
 Route::post('/surat/proses', [SuratController::class, 'proses'])->name('surat.proses');
 Route::get('/surat/success/{id}', [SuratController::class, 'success'])->name('surat.success');
 Route::get('/surat/pdf/{id}', [SuratController::class, 'pdf'])->name('surat.pdf');
-
-Route::get('/admin/create', [InstansiController::class, 'create'])->name('create');

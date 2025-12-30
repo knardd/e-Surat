@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('surats', function (Blueprint $table) {
+        Schema::create('surat_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('jenis_id')->constrained('jenis')->cascadeOnDelete();
-            $table->string('no_surat');
-            $table->date('tanggal_surat');
-            $table->integer('no_urut');
+            $table->foreignId('surat_id')->constrained('surats')->cascadeOnDelete();
+            $table->string('key');
+            $table->text('value');
             $table->timestamps();
+
+            $table->index(['surat_id', 'key']);
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('surats');
+        Schema::dropIfExists('surat_details');
     }
 };

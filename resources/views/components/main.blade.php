@@ -89,43 +89,32 @@
 
 <!-- JUDUL -->
 <div class="judul">
-    <h3 class="uppercase">{{ $judul }}</h3>
-    <p>Nomor: {{ $nomor }}</p>
+    <h3 class="uppercase">{{ $surat->jenis->name }}</h3>
+    <p>Nomor: {{ $surat->no_surat }}</p>
 </div>
 
 <!-- PEMBUKA -->
-<p>
-    Yang bertanda tangan di bawah ini, Kepala Desa Bakipandeyan, Kecamatan Baki,
-    Kabupaten Sukoharjo, dengan ini menerangkan bahwa:
-</p>
+@yield('pembuka')
 
 <!-- DATA -->
-<table class="data" width="100%">
-    <tr><td width="30%">Nama</td><td>: {{ $nama }}</td></tr>
-    <tr><td>Tempat / Tanggal Lahir</td><td>: {{ $ttl }}</td></tr>
-    <tr><td>NIK</td><td>: {{ $nik }}</td></tr>
-    <tr><td>Jenis Kelamin</td><td>: {{ $jk }}</td></tr>
-    <tr><td>Agama</td><td>: {{ $agama }}</td></tr>
-    <tr><td>Pekerjaan</td><td>: {{ $pekerjaan }}</td></tr>
-    <tr><td>Alamat</td><td>: {{ $alamat }}</td></tr>
-</table>
+@yield('data')
 
 <!-- ISI -->
-<p class="isi">
-    {{ $isi }}
-</p>
+@hasSection('isi')
+    <p class="isi">
+        @yield('isi')
+    </p>
+@endif
 
 <!-- PENUTUP -->
-<p>
-    Demikian surat keterangan ini dibuat untuk dipergunakan sebagaimana mestinya.
-</p>
+@yield('penutup')
 
 <!-- TANDA TANGAN (KANAN BAWAH) -->
 <table class="ttd">
     <tr>
         <td width="60%"></td>
         <td align="center">
-            Sukoharjo, {{ $tanggal }}<br>
+            Sukoharjo, {{ $surat->tanggal_surat }}<br>
             Kepala Desa Bakipandeyan<br><br><br>
             <img src="{{ public_path('storage/Tanda Tangan.png') }}" width="120"><br>
             <strong>Sugeng Purnomo</strong><br>

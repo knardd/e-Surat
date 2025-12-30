@@ -1,127 +1,78 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Surat</title>
+    @vite('resources/css/app.css')
     <style>
+        /* Opsional: pastikan font Inter tersedia */
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-        }
-        .container {
-            max-width: 600px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,.08);
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            font-weight: 600;
-            display: block;
-            margin-bottom: 6px;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
-        input:focus {
-            outline: none;
-            border-color: #4f46e5;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            background: #4f46e5;
-            color: white;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #4338ca;
-        }
-        .note {
-            font-size: 13px;
-            color: #555;
-            margin-top: 15px;
-            text-align: center;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 min-h-screen py-8 px-4">
+    
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-xl shadow-sm p-6 md:p-8">
+            <h1 class="text-2xl font-bold text-gray-800 text-center mb-8">
+                FORM {{ strtoupper($jenis->name) }}
+            </h1>
 
-<div class="container">
-    <h2>FORM {{ strtoupper($jenis->name) }}</h2>
+            <form action="{{ route('surat.proses') }}" method="POST">
+    @csrf
+    <input type="hidden" name="jenis_id" value="{{ $jenis->id }}">
 
-    <form action="{{ route('surat.proses') }}" method="POST">
-        @csrf
-        <input type="hidden" name="jenis_id" value="{{ $jenis->id }}">
+    @foreach ($fields as $name => $field)
+        <div class="mb-5">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                {{ $field['label'] }}
+            </label>
 
-        <div class="form-group">
-            <label>Nama Lengkap</label>
-            <input type="text" name="nama" required>
+            @if ($field['type'] === 'textarea')
+                <textarea
+                    name="detail[{{ $name }}]"
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg"
+                    {{ $field['required'] ? 'required' : '' }}
+                ></textarea>
+
+            @elseif ($field['type'] === 'select')
+                <select
+                    name="detail[{{ $name }}]"
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg"
+                    {{ $field['required'] ? 'required' : '' }}
+                >
+                    <option value="">-- Pilih --</option>
+                    @foreach ($field['options'] as $option)
+                        <option value="{{ $option }}">{{ $option }}</option>
+                    @endforeach
+                </select>
+
+            @else
+                <input
+                    type="{{ $field['type'] }}"
+                    name="detail[{{ $name }}]"
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg"
+                    {{ $field['required'] ? 'required' : '' }}
+                />
+            @endif
+            @error('detail.'.$name)
+            <span class="text-red-500 text-sm">{{ $message }}</span>
+        @enderror
         </div>
+    @endforeach
 
-        <div class="form-group">
-            <label>NIK</label>
-            <input type="text" name="nik" required>
+    <button class="w-full bg-indigo-600 text-white py-3 rounded-lg">
+        Buat Surat
+    </button>
+</form>
+
+            <!-- Note -->
+            <p class="text-center text-sm text-gray-500 mt-6">
+                Pastikan data diisi dengan benar sesuai KK/KTP
+            </p>
         </div>
-
-        <div class="form-group">
-            <label>Tempat / Tanggal Lahir</label>
-            <input type="text" name="ttl" placeholder="Contoh: Sukoharjo, 12 Januari 2005" required>
-        </div>
-
-        <div class="form-group">
-            <label>Jenis Kelamin</label>
-            <select name="jk" required>
-                <option value="">-- Pilih --</option>
-                <option value="Laki-laki">Laki-laki</option>
-                <option value="Perempuan">Perempuan</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Agama</label>
-            <select name="agama" required>
-                <option value="">-- Pilih --</option>
-                <option>Islam</option>
-                <option>Kristen</option>
-                <option>Katolik</option>
-                <option>Hindu</option>
-                <option>Buddha</option>
-                <option>Konghucu</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Pekerjaan</label>
-            <input type="text" name="pekerjaan" required>
-        </div>
-
-        <div class="form-group">
-            <label>Alamat Lengkap</label>
-            <input type="text" name="alamat" required>
-        </div>
-
-        <button type="submit">Buat Surat</button>
-    </form>
-
-    <div class="note">
-        Pastikan data diisi dengan benar sesuai KK/KTP
     </div>
-</div>
-
 </body>
 </html>

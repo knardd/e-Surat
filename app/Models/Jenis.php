@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Jenis extends Model
 {
-    protected $fillable = ['id', 'name', 'kode', 'isi'];
+    protected $fillable = ['id', 'name', 'kode', 'isi', 'slug'];
 
     public function surats()
     {
