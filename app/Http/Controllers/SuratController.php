@@ -11,6 +11,11 @@ use function Symfony\Component\Clock\now;
 
 class SuratController extends Controller
 {
+    public function dashboard()
+    {
+        return view('surat.dashboard');
+    }
+
     public function pilih()
     {
         $jenis = Jenis::all();
@@ -78,7 +83,13 @@ class SuratController extends Controller
 {
     $surat = Surat::with('details', 'jenis')->findOrFail($id);
 
-    $view = in_array($surat->jenis->slug, ['surat-keterangan-kelahiran','surat-keterangan-kematian','surat-keterangan-kepemilikan-rumah'])
+    $view = in_array($surat->jenis->slug, [
+        'surat-keterangan-kelahiran',
+        'surat-keterangan-kematian',
+        'surat-keterangan-kepemilikan-rumah',
+        'surat-keterangan-usaha',
+        'surat-keterangan-keluarga',
+        ])
         ? 'components.' . $surat->jenis->slug
         : 'components.umum';
 

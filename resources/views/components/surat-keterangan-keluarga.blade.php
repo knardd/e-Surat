@@ -9,19 +9,26 @@
 
 @section('data')
 <table class="data" width="100%">
-    @foreach( $surat->detail_kepemilikan as $key => $value )
+    @foreach( $surat->detail_pemohon as $key => $value )
+        <tr>
+            <td width="30%">{{ ucwords(str_replace('_',' ',$key)) }}</td>
+            <td>: {{ $value }}</td>
+        </tr>
+    @endforeach
+
+    <tr></tr>
+        <td colspan="2" style="padding-top:10px;">
+            <p>Benar memiliki hubungan keluarga dengan:</p>
+        </td>
+    </tr>
+
+    @foreach( $surat->detail_anggota_keluarga as $key => $value )
         <tr>
             <td width="30%">{{ ucwords(str_replace('_',' ',$key)) }}</td>
             <td>: {{ $value }}</td>
         </tr>
     @endforeach
 </table>
-@endsection
-
-@section('isi')
-<p class="isi">
-    {!! nl2br(e($surat->isiFormatted())) !!}
-</p>
 @endsection
 
 @section('penutup')

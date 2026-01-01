@@ -87,8 +87,8 @@ class JenisSeeder extends Seeder
                 'kode' => '593',
                 'name' => 'Surat Keterangan Kepemilikan Rumah',
                 'isi' => 'Bahwa yang bersangkutan benar merupakan warga kelurahan setempat dan berdasarkan data serta keterangan dari lingkungan setempat, yang bersangkutan memiliki atau menempati sebuah rumah/tanah yang berlokasi di {alamat_rumah} dengan luas tanah {luas_tanah} m² dan luas bangunan {luas_bangunan} m².
-                Keterangan kepemilikan rumah/tanah ini diberikan berdasarkan pernyataan yang bersangkutan serta hasil konfirmasi dari lingkungan setempat.
-                Surat keterangan kepemilikan rumah/tanah ini dibuat untuk keperluan administrasi, pengurusan dokumen, maupun keperluan lain yang memerlukan keterangan kepemilikan rumah/tanah.',
+Keterangan kepemilikan rumah/tanah ini diberikan berdasarkan pernyataan yang bersangkutan serta hasil konfirmasi dari lingkungan setempat.
+Surat keterangan kepemilikan rumah/tanah ini dibuat untuk keperluan administrasi, pengurusan dokumen, maupun keperluan lain yang memerlukan keterangan kepemilikan rumah/tanah.',
             ],
         ]);
     }

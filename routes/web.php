@@ -10,3 +10,4 @@ Route::get('/surat/form/{jenis:slug}', [SuratController::class, 'form'])->name('
 Route::post('/surat/proses', [SuratController::class, 'proses'])->name('surat.proses');
 Route::get('/surat/success/{id}', [SuratController::class, 'success'])->name('surat.success');
 Route::get('/surat/pdf/{id}', [SuratController::class, 'pdf'])->name('surat.pdf');
+Route::get('/surat/dashboard', [SuratController::class, 'dashboard'])->name('surat.dashboard');
