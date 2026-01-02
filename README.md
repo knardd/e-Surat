@@ -52,7 +52,6 @@ npm install
 npm run build
 cp .env.example .env
 php artisan key:generate
-Atur koneksi database pada file .env sesuai dengan lingkungan yang digunakan.
 php artisan migrate
 php artisan serve
 ```
