@@ -47,25 +47,38 @@ Aplikasi ini dirancang untuk membantu proses pembuatan surat secara lebih cepat,
 ```bash
 git clone https://github.com/username/e-surat.git
 cd e-surat
-Install dependency
+```
+
+2. **Install dependency**
+
+```bash
 composer install
 npm install
 npm run build
+```
 
-Setup environment
+3. **Setup environment**
 
+```bash
 cp .env.example .env
 php artisan key:generate
+```
 
-Konfigurasi database
+4. **Konfigurasi database**
+
+```bash
 Atur koneksi database pada file .env sesuai dengan lingkungan yang digunakan.
+```
 
-Migrasi database
+5. **Migrasi database**
 
+```bash
 php artisan migrate
+```
 
-Menjalankan server
+6. **Menjalankan server**
 
+```bash
 php artisan serve
 ```
 
