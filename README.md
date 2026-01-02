@@ -42,43 +42,18 @@ Aplikasi ini dirancang untuk membantu proses pembuatan surat secara lebih cepat,
 
 ## Cara Instalasi
 
-1. **Clone repository**
+Buka terminal di folder project, lalu **copy-paste seluruh blok berikut sekaligus**:
 
 ```bash
 git clone https://github.com/username/e-surat.git
 cd e-surat
-```
-
-2. **Install dependency**
-
-```bash
 composer install
 npm install
 npm run build
-```
-
-3. **Setup environment**
-
-```bash
 cp .env.example .env
 php artisan key:generate
-```
-
-4. **Konfigurasi database**
-
-```bash
 Atur koneksi database pada file .env sesuai dengan lingkungan yang digunakan.
-```
-
-5. **Migrasi database**
-
-```bash
 php artisan migrate
-```
-
-6. **Menjalankan server**
-
-```bash
 php artisan serve
 ```
 
