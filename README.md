@@ -65,3 +65,23 @@ Setelah server dijalankan, aplikasi dapat diakses melalui browser pada alamat:
 http://127.0.0.1:8000
 
 Pengguna dapat memilih jenis surat, mengisi data, dan mencetak surat dalam format PDF.
+
+---
+
+## Screenshot
+
+### Halaman Pilihan Surat
+
+![Halaman Pilihan Surat](screenshots/Pilihan-Surat.png)
+
+### Halaman Form
+
+![Halaman Form](screenshots/Form.png)
+
+### Halaman Succes
+
+![Halaman Success](screenshots/Success.png)
+
+### Hasil Surat
+
+![Hasil Surat](screenshots/Hasil.png)

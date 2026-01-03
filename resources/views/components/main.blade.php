@@ -33,6 +33,7 @@
 
         .judul p {
             margin: 5px 0 0 0;
+            font-size: 11pt;
         }
 
         .isi {
@@ -63,6 +64,9 @@
 
         .ttd td {
             vertical-align: top;
+        }
+        .uppercase {
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -114,7 +118,7 @@
     <tr>
         <td width="60%"></td>
         <td align="center">
-            Sukoharjo, {{ $surat->tanggal_surat }}<br>
+            Sukoharjo, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y') }}<br>
             Kepala Desa Bakipandeyan<br><br><br>
             <img src="{{ public_path('storage/Tanda Tangan.png') }}" width="120"><br>
             <strong>Sugeng Purnomo</strong><br>
