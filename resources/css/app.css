@@ -1,3 +1,117 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply antialiased;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-gray-100;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-primary-300 rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-primary-400;
+    }
+}
+
+@layer components {
+    /* Glass Card Effect */
+    .glass-card {
+        @apply bg-white/80 backdrop-blur-md border border-white/20;
+    }
+
+    /* Gradient Border Effect */
+    .gradient-border {
+        position: relative;
+        background: linear-gradient(white, white) padding-box,
+                    linear-gradient(135deg, #1E40AF, #3B82F6, #0EA5E9) border-box;
+        border: 2px solid transparent;
+    }
+
+    /* Hero Gradient Background */
+    .hero-gradient {
+        background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
+    }
+
+    /* Subtle Page Background */
+    .page-gradient {
+        background: linear-gradient(180deg, #EFF6FF 0%, #F8FAFC 30%, #FFFFFF 100%);
+    }
+
+    /* Card Hover Effect */
+    .card-interactive {
+        @apply transition-all duration-300 ease-out;
+    }
+
+    .card-interactive:hover {
+        @apply -translate-y-1 shadow-card-hover;
+    }
+
+    /* Icon Container with Glow */
+    .icon-container {
+        @apply relative flex items-center justify-center w-16 h-16 rounded-2xl;
+        @apply bg-gradient-to-br from-primary-50 to-primary-100;
+        @apply text-primary transition-all duration-300;
+    }
+
+    .card-interactive:hover .icon-container {
+        @apply from-primary-100 to-primary-200 scale-110;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Button Primary Premium */
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-6 py-3.5;
+        @apply bg-primary text-white font-semibold rounded-xl;
+        @apply shadow-glow transition-all duration-200;
+        @apply hover:bg-primary-hover hover:-translate-y-0.5 hover:shadow-glow-lg;
+        @apply focus:outline-none focus:ring-4 focus:ring-primary-300;
+        @apply active:translate-y-0;
+    }
+
+    /* Button Secondary */
+    .btn-secondary {
+        @apply inline-flex items-center justify-center px-6 py-3.5;
+        @apply bg-white text-text-main font-medium rounded-xl;
+        @apply border border-border-soft;
+        @apply transition-all duration-200;
+        @apply hover:bg-gray-50 hover:text-primary hover:border-primary-200;
+        @apply focus:outline-none focus:ring-2 focus:ring-border-soft;
+    }
+
+    /* Input Field Premium */
+    .input-field {
+        @apply w-full px-4 py-3.5 bg-white text-text-main;
+        @apply border border-border-soft rounded-xl;
+        @apply outline-none transition-all duration-200 ease-in-out;
+        @apply placeholder:text-text-muted;
+        @apply hover:border-primary-300;
+        @apply focus:ring-4 focus:ring-primary-100 focus:border-primary;
+    }
+
+    .input-field.has-error {
+        @apply border-danger focus:ring-danger/10 focus:border-danger;
+    }
+
+    /* Header Style */
+    .header-main {
+        @apply bg-white/95 backdrop-blur-md border-b border-border-soft;
+        @apply sticky top-0 z-50;
+    }
+}

@@ -1,92 +1,128 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Surat Berhasil Dibuat</title>
-    @vite('resources/css/app.css')
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        /* Animasi kecil untuk checkmark */
-        @keyframes scaleIn {
-            0% { transform: scale(0); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-scale-in {
-            animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-    </style>
-</head>
-<body class="bg-background min-h-screen flex items-center justify-center p-4 selection:bg-primary selection:text-white">
-
-    <div class="w-full max-w-md">
-        <div class="bg-surface rounded-2xl shadow-xl border border-border-soft overflow-hidden relative">
+<x-layout title="Surat Berhasil Dibuat">
+    <div class="py-10 md:py-16">
+        <div class="max-w-2xl mx-auto px-4">
             
-            <div class="h-2 w-full bg-primary"></div>
-
-            <div class="p-8 md:p-10 text-center">
-                <div class="mb-8 flex justify-center transition-all duration-300">
-                    <img src="{{ asset('storage/Logo.png') }}" alt="Logo Instansi" class="h-14 w-auto object-contain">
-                </div>
-
-                <div class="mb-6 flex justify-center">
-                    <div class="relative flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 animate-scale-in">
-                        <div class="absolute inset-0 rounded-full bg-primary/5 animate-ping"></div>
+            <!-- Success Hero Section -->
+            <div class="text-center mb-8 animate-fade-in">
+                <!-- Animated Success Badge -->
+                <div class="inline-flex items-center justify-center mb-6">
+                    <div class="relative">
+                        <!-- Outer Ring Animation -->
+                        <div class="absolute inset-0 rounded-full border-4 border-success/30 animate-ping"></div>
+                        <div class="absolute inset-0 rounded-full border-4 border-success/20 animate-pulse"></div>
                         
-                        <svg class="w-12 h-12 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                        </svg>
+                        <!-- Main Circle -->
+                        <div class="relative flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-success to-emerald-600 shadow-lg animate-scale-in">
+                            <svg class="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
-                <h1 class="text-2xl font-bold text-text-main mb-2">
-                    Berhasil Dibuat!
+                <h1 class="text-3xl md:text-4xl font-extrabold text-text-main mb-2 animate-slide-up">
+                    Surat Berhasil Dibuat!
                 </h1>
-                <p class="text-gray-500 text-sm mb-1">
-                    Dokumen berikut telah siap untuk dicetak:
+                <p class="text-text-muted animate-slide-up" style="animation-delay: 0.1s">
+                    Dokumen Anda telah siap untuk dicetak
                 </p>
-                <p class="text-lg font-semibold text-primary mb-8">
-                    "{{ $surat->jenis->name }}"
-                </p>
+            </div>
 
-                <div class="flex flex-col gap-3">
+            <!-- Document Preview Card -->
+            <div class="bg-white rounded-2xl shadow-card border border-border-soft overflow-hidden animate-slide-up" style="animation-delay: 0.2s">
+                <!-- Card Header -->
+                <div class="bg-gradient-to-r from-primary-50 to-primary-100 px-6 py-4 border-b border-primary-200">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-white rounded-lg shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-primary-600 font-medium uppercase tracking-wide">Dokumen Surat</p>
+                            <h2 class="text-lg font-bold text-primary-800">{{ $surat->jenis->name }}</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Details -->
+                <div class="px-6 py-5 space-y-4">
+                    <div class="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span class="text-sm text-text-muted flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                            </svg>
+                            Nomor Surat
+                        </span>
+                        <span class="text-sm font-semibold text-text-main">{{ $surat->no_surat }}</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span class="text-sm text-text-muted flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                            </svg>
+                            Tanggal Surat
+                        </span>
+                        <span class="text-sm font-semibold text-text-main">{{ \Carbon\Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y') }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between py-3">
+                        <span class="text-sm text-text-muted flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Status
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success/10 text-success">
+                            <span class="w-1.5 h-1.5 rounded-full bg-success mr-1.5"></span>
+                            Siap Cetak
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="px-6 pb-6 pt-2 space-y-3">
                     <a
                         href="{{ route('surat.pdf', $surat->id) }}"
                         target="_blank"
-                        class="group w-full inline-flex items-center justify-center px-6 py-3.5 
-                               bg-primary hover:bg-primary-hover text-white font-semibold rounded-xl 
-                               shadow-glow transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-primary/30"
+                        class="btn-primary w-full justify-center text-base py-4 group"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 9V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7"/>
-                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                            <path d="M6 14h12v8H6z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z" />
                         </svg>
-                        Cetak PDF Sekarang
+                        Cetak / Unduh PDF
                     </a>
 
                     <a
                         href="{{ route('surat.pilih') }}"
-                        class="w-full inline-flex items-center justify-center px-6 py-3.5 
-                               bg-surface text-text-main font-medium rounded-xl border border-border-soft
-                               hover:bg-gray-50 hover:text-primary transition-colors duration-200
-                               focus:outline-none focus:ring-2 focus:ring-border-soft"
+                        class="btn-secondary w-full justify-center"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                         Buat Surat Lain
                     </a>
                 </div>
             </div>
-        </div>
-        
-        <p class="text-center text-xs text-gray-400 mt-6">
-            &copy; {{ date('Y') }} e-Surat System. All rights reserved.
-        </p>
-    </div>
 
-</body>
-</html>
+            <!-- Info Tips -->
+            <div class="mt-6 p-4 bg-primary-50 rounded-xl border border-primary-100 animate-slide-up" style="animation-delay: 0.3s">
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-primary-800">Tips</p>
+                        <p class="text-xs text-primary-600 mt-0.5">
+                            Pastikan untuk menyimpan file PDF sebagai arsip digital. Surat dapat dicetak kapan saja dengan membuka kembali file PDF tersebut.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</x-layout>
