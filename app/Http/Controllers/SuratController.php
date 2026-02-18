@@ -6,6 +6,8 @@ use App\Models\Jenis;
 use App\Models\Surat;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Inertia\Inertia;
 
 use function Symfony\Component\Clock\now;
 
@@ -19,7 +21,9 @@ class SuratController extends Controller
     public function pilih()
     {
         $jenis = Jenis::all();
-        return view('surat.keperluan', compact('jenis'));
+        return Inertia::render('Beranda', [
+            'jenis' => $jenis,
+        ]);
     }
 
     public function form(Jenis $jenis)
@@ -32,7 +36,9 @@ class SuratController extends Controller
 
     $fields = $config['fields'];
 
-    return view('surat.form', compact('jenis', 'fields'));
+    return Inertia::render('FormSurat', [
+        'jenis' => $jenis, 
+        'fields' => $fields]);
 }
 
     public function proses(Request $request)
@@ -59,7 +65,7 @@ class SuratController extends Controller
         'jenis_id' => $jenis->id,
         'no_surat' => $noSurat,
         'no_urut' => $nomorUrut,
-        'tanggal_surat' => now(),
+        'tanggal_surat' => Carbon::now(),
     ]);
 
     foreach ($data['detail'] as $key => $value) {
@@ -74,9 +80,11 @@ class SuratController extends Controller
 
     public function success($id)
 {
-    $surat = Surat::findOrFail($id);
+    $surat = Surat::with('jenis')->findOrFail($id);
 
-    return view('surat.succes', compact('surat'));
+    return Inertia::render("Succes", [
+        'surat' => $surat
+    ]); 
 }
 
     public function pdf($id)

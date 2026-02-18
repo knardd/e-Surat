@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title ?? 'E-Surat Digital' }} - Pemerintah Kabupaten Sukoharjo</title>
     <meta name="description" content="Sistem pembuatan surat digital Pemerintah Kabupaten Sukoharjo">
-    @vite('resources/css/app.css')
+    @vite('resources/css/app.css', 'resources/js/app.jsx')
+    @inertiaHead
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -85,6 +86,6 @@
             </div>
         </div>
     </footer>
-
+@inertia
 </body>
 </html>
