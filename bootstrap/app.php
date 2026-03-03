@@ -17,9 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
-        $middleware->web(append: [
-        HandleInertiaRequests::class,
-    ]);
+        // Register alias untuk role middleware
+        $middleware->alias([
+            'role' => \App\Http\Middleware\CheckRole::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

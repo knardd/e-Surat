@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Surat;
 use App\Models\User;
+use Database\Seeders\SuratSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -23,7 +25,8 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(
             [
-                JenisSeeder::class
+                JenisSeeder::class,
+                UserSeeder::class,
             ]
         );
     }

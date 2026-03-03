@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('surat_details', function (Blueprint $table) {
+        Schema::create('surat_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('surat_id')->constrained('surats')->cascadeOnDelete();
-            $table->string('key');
-            $table->text('value');
+            $table->foreignId('surat_id')->constrained()->cascadeOnDelete();
+            $table->string('status');
+            $table->foreignId('changed_by')->constrained('users');
             $table->timestamps();
-            $table->index(['surat_id', 'key']);
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('surat_details');
+        Schema::dropIfExists('surat_logs');
     }
 };

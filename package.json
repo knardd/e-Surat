@@ -23,7 +23,10 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
+        "framer": "^2.4.1",
+        "motion": "^12.34.2",
         "react": "^19.2.4",
-        "react-dom": "^19.2.4"
+        "react-dom": "^19.2.4",
+        "recharts": "^3.7.0"
     }
 }

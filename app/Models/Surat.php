@@ -7,11 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 class Surat extends Model
 {
     protected $fillable = [
+        'user_id',
         'jenis_id',
+        'detail',
+        'status',
+        'internal_status',
+        'current_handler',
+        'approved_by',
+        'approved_at',
+        'catatan',
         'no_surat',
         'tanggal_surat',
         'no_urut',
+        
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function jenis()
     {
@@ -21,6 +35,21 @@ class Surat extends Model
     public function details()
     {
         return $this->hasMany(SuratDetail::class);
+    }
+
+    public function logs()
+    {
+        return $this->hasMany(SuratLogs::class);
+    }
+
+    public function approvedByUser()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function currentHandlerUser()
+    {
+        return $this->belongsTo(User::class, 'current_handler');
     }
 
     public function getDetailMapAttribute()

@@ -62,10 +62,20 @@ class SuratController extends Controller
     $noSurat = $jenis->kode . '/' . str_pad($nomorUrut, 3, '0', STR_PAD_LEFT) . '/' . date('m') . '/' . date('Y');
     
     $surat = Surat::create([
+        'user_id' => auth()->id(),
         'jenis_id' => $jenis->id,
+        'status' => 'diproses',
+        'internal_status' => 'submitted',
         'no_surat' => $noSurat,
         'no_urut' => $nomorUrut,
         'tanggal_surat' => Carbon::now(),
+    ]);
+
+    // Log creation
+    $surat->logs()->create([
+        'status' => 'diproses',
+        'changed_by' => auth()->id(),
+        'catatan' => 'Permintaan surat dibuat',
     ]);
 
     foreach ($data['detail'] as $key => $value) {
@@ -105,5 +115,52 @@ class SuratController extends Controller
         ->setPaper('A4', 'portrait')
         ->stream('surat.pdf');
 }
+
+    /**
+     * User dashboard - show all surat they requested
+     */
+    public function userDashboard()
+    {
+        $surats = Surat::where('user_id', auth()->id())
+            ->with(['jenis', 'logs'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return Inertia::render('User/Dashboard', [
+            'surats' => $surats,
+        ]);
+    }
+
+    /**
+     * Download surat PDF (only if approved by admin)
+     */
+    public function download($id)
+    {
+        $surat = Surat::with('details', 'jenis')->findOrFail($id);
+
+        // Check ownership
+        if ($surat->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Check if approved
+        if ($surat->internal_status !== 'final_approved') {
+            abort(403, 'Surat belum disetujui admin');
+        }
+
+        $view = in_array($surat->jenis->slug, [
+            'surat-keterangan-kelahiran',
+            'surat-keterangan-kematian',
+            'surat-keterangan-kepemilikan-rumah',
+            'surat-keterangan-usaha',
+            'surat-keterangan-keluarga',
+        ])
+            ? 'components.' . $surat->jenis->slug
+            : 'components.umum';
+
+        return Pdf::loadView($view, compact('surat'))
+            ->setPaper('A4', 'portrait')
+            ->download('surat-' . $surat->no_surat . '.pdf');
+    }
 
 }
