@@ -183,7 +183,7 @@ const Succes = ({ surat }) => {
                         </a>
 
                         <Link
-                            href="/"
+                            href="/surat/pilih"
                             className="btn-secondary w-full justify-center"
                         >
                             {" "}

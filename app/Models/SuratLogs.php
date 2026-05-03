@@ -10,7 +10,6 @@ class SuratLogs extends Model
         'surat_id',
         'status',
         'changed_by',
-        'catatan',
     ];
 
     public function surat()

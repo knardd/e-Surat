@@ -1,36 +1,28 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import { useState } from "react";
 
 const CekSurat = () => {
-    // Dummy data (nanti ambil dari backend)
-    const [letters, setLetters] = useState([
+    // Dummy data dulu (nanti tinggal ambil dari controller)
+    const requests = [
         {
             id: 1,
             nama: "Andi Pratama",
             jenis: "Surat Domisili",
             tanggal: "18 Feb 2026",
-            status: "Menunggu Verifikasi",
+            status: "Menunggu",
         },
         {
             id: 2,
             nama: "Siti Rahma",
             jenis: "Surat Usaha",
             tanggal: "17 Feb 2026",
-            status: "Menunggu Verifikasi",
+            status: "Menunggu",
         },
-    ]);
-
-    const handleApprove = (id) => {
-        const updated = letters.map((item) =>
-            item.id === id ? { ...item, status: "Siap Cetak" } : item,
-        );
-        setLetters(updated);
-    };
+    ];
 
     return (
         <AuthenticatedLayout>
-            <Head title="Cek Surat" />
+            <Head title="Operator Dashboard" />
 
             <div className="min-h-screen bg-[#F9FAFB] text-slate-900 pb-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -38,69 +30,103 @@ const CekSurat = () => {
                     <div className="mb-6 flex items-center justify-between border-b border-slate-200 pb-4">
                         <div>
                             <h1 className="text-xl font-bold text-slate-800 tracking-tight">
-                                Verifikasi Surat
+                                Operator Dashboard
                             </h1>
                             <p className="text-xs text-slate-500 font-medium mt-0.5">
-                                Review and authorize pending letter requests
+                                Manage letter requests and submit to admin
                             </p>
                         </div>
                     </div>
 
-                    {/* Compact Stats Grid */}
+                    {/* Compact Statistics Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        {[
-                            {
-                                label: "Total Requests",
-                                value: letters.length,
-                                color: "blue",
-                            },
-                            {
-                                label: "Pending Review",
-                                value: letters.filter(
-                                    (l) => l.status === "Menunggu Verifikasi",
-                                ).length,
-                                color: "amber",
-                            },
-                            {
-                                label: "Ready to Print",
-                                value: letters.filter(
-                                    (l) => l.status === "Siap Cetak",
-                                ).length,
-                                color: "emerald",
-                            },
-                        ].map((stat, i) => (
-                            <div
-                                key={i}
-                                className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between"
-                            >
-                                <div>
-                                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                                        {stat.label}
-                                    </p>
-                                    <h2 className="text-xl font-bold text-slate-800 leading-tight">
-                                        {stat.value}
-                                    </h2>
-                                </div>
-                                <div
-                                    className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
-                                        stat.color === "blue"
-                                            ? "bg-blue-50 text-blue-600 border-blue-100"
-                                            : stat.color === "amber"
-                                              ? "bg-amber-50 text-amber-600 border-amber-100"
-                                              : "bg-emerald-50 text-emerald-600 border-emerald-100"
-                                    }`}
-                                >
-                                    Live
-                                </div>
+                        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-blue-200 transition-colors">
+                            <div>
+                                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                    Total Requests
+                                </p>
+                                <h2 className="text-xl font-bold text-slate-800 leading-tight">
+                                    {requests.length}
+                                </h2>
                             </div>
-                        ))}
+                            <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center border border-blue-100">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 text-blue-600"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-amber-200 transition-colors">
+                            <div>
+                                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                    Pending Process
+                                </p>
+                                <h2 className="text-xl font-bold text-slate-800 leading-tight">
+                                    {requests.length}
+                                </h2>
+                            </div>
+                            <div className="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center border border-amber-100 text-amber-600">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-emerald-200 transition-colors">
+                            <div>
+                                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                    Sent to Admin
+                                </p>
+                                <h2 className="text-xl font-bold text-slate-800 leading-tight">
+                                    0
+                                </h2>
+                            </div>
+                            <div className="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center border border-emerald-100 text-emerald-600">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Compact Data Table */}
+                    {/* Compact Table Section */}
                     <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                         <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-white">
                             <h3 className="text-sm font-bold text-slate-800">
-                                Queue Management
+                                Pending Requests
                             </h3>
                             <div className="relative">
                                 <input
@@ -133,21 +159,21 @@ const CekSurat = () => {
                                             Pemohon
                                         </th>
                                         <th className="px-4 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                                            Layanan
+                                            Jenis Surat
                                         </th>
                                         <th className="px-4 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                                            Timestamp
+                                            Tanggal
                                         </th>
                                         <th className="px-4 py-3 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                             Status
                                         </th>
                                         <th className="px-4 py-3 text-right text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                                            Actions
+                                            Aksi
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-slate-100">
-                                    {letters.map((item) => (
+                                    {requests.map((item) => (
                                         <tr
                                             key={item.id}
                                             className="hover:bg-slate-50/50 transition-colors duration-150"
@@ -180,35 +206,14 @@ const CekSurat = () => {
                                                 {item.tanggal}
                                             </td>
                                             <td className="px-4 py-3 whitespace-nowrap text-center">
-                                                {item.status ===
-                                                "Siap Cetak" ? (
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-100 uppercase tracking-tight">
-                                                        Ready
-                                                    </span>
-                                                ) : (
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-100 uppercase tracking-tight">
-                                                        Pending
-                                                    </span>
-                                                )}
+                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-100 uppercase tracking-tight">
+                                                    {item.status}
+                                                </span>
                                             </td>
                                             <td className="px-4 py-3 whitespace-nowrap text-right">
-                                                {item.status !==
-                                                "Siap Cetak" ? (
-                                                    <button
-                                                        onClick={() =>
-                                                            handleApprove(
-                                                                item.id,
-                                                            )
-                                                        }
-                                                        className="px-3 py-1.5 bg-blue-600 text-white text-[10px] font-bold rounded-md hover:bg-blue-700 shadow-sm transition-all"
-                                                    >
-                                                        Authorize
-                                                    </button>
-                                                ) : (
-                                                    <button className="px-3 py-1.5 bg-slate-50 text-slate-400 text-[10px] font-bold rounded-md border border-slate-200 cursor-not-allowed">
-                                                        Authorized
-                                                    </button>
-                                                )}
+                                                <button className="px-3 py-1.5 bg-blue-600 text-white text-[10px] font-bold rounded-md hover:bg-blue-700 shadow-sm transition-all">
+                                                    Kirim ke Admin
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
@@ -216,14 +221,8 @@ const CekSurat = () => {
                             </table>
                         </div>
 
-                        {letters.length === 0 && (
-                            <div className="py-12 text-center text-slate-400 italic text-xs">
-                                No pending requests found.
-                            </div>
-                        )}
-
                         <div className="px-4 py-3 border-t border-slate-50 bg-slate-50/30 flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase">
-                            <span>{letters.length} Results Found</span>
+                            <span>{requests.length} Permintaan Ditemukan</span>
                             <div className="flex space-x-1">
                                 <button className="p-1 rounded bg-white border border-slate-200 hover:bg-slate-50">
                                     Prev

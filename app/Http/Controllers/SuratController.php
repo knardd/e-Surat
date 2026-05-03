@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Jenis;
 use App\Models\Surat;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 use function Symfony\Component\Clock\now;
@@ -48,7 +49,8 @@ class SuratController extends Controller
 
     $rules = [];
     foreach ($fields as $name => $field) {
-        $rules["detail.$name"] = 'required|' . $field['rules'];
+        $isRequired = (isset($field['required']) && $field['required']) ? 'required|' : 'nullable|';
+        $rules["detail.$name"] = $isRequired . $field['rules'];
     }
 
     $data = $request->validate($rules);
@@ -62,7 +64,7 @@ class SuratController extends Controller
     $noSurat = $jenis->kode . '/' . str_pad($nomorUrut, 3, '0', STR_PAD_LEFT) . '/' . date('m') . '/' . date('Y');
     
     $surat = Surat::create([
-        'user_id' => auth()->id(),
+        'user_id' => Auth::id(),
         'jenis_id' => $jenis->id,
         'status' => 'diproses',
         'internal_status' => 'submitted',
@@ -74,16 +76,16 @@ class SuratController extends Controller
     // Log creation
     $surat->logs()->create([
         'status' => 'diproses',
-        'changed_by' => auth()->id(),
+        'changed_by' => Auth::id(),
         'catatan' => 'Permintaan surat dibuat',
     ]);
 
     foreach ($data['detail'] as $key => $value) {
-    $surat->details()->create([
-        'key' => $key,
-        'value' => $value,
-    ]);
-}
+        $surat->details()->create([
+            'key' => $key,
+            'value' => $value,
+        ]);
+    }
 
     return redirect()->route('surat.success', $surat->id);
 }
@@ -91,6 +93,11 @@ class SuratController extends Controller
     public function success($id)
 {
     $surat = Surat::with('jenis')->findOrFail($id);
+
+    // Security check: only owner can see success page
+    if ($surat->user_id !== Auth::id()) {
+        abort(403, 'Unauthorized');
+    }
 
     return Inertia::render("Succes", [
         'surat' => $surat
@@ -100,16 +107,13 @@ class SuratController extends Controller
     public function pdf($id)
 {
     $surat = Surat::with('details', 'jenis')->findOrFail($id);
+    
+    // Security check: only owner, operator, or admin can view PDF
+    if ($surat->user_id !== Auth::id() && !in_array(Auth::user()->role, ['admin', 'operator'])) {
+        abort(403, 'Unauthorized');
+    }
 
-    $view = in_array($surat->jenis->slug, [
-        'surat-keterangan-kelahiran',
-        'surat-keterangan-kematian',
-        'surat-keterangan-kepemilikan-rumah',
-        'surat-keterangan-usaha',
-        'surat-keterangan-keluarga',
-        ])
-        ? 'components.' . $surat->jenis->slug
-        : 'components.umum';
+    $view = $this->getPdfView($surat);
 
     return Pdf::loadView($view, compact('surat'))
         ->setPaper('A4', 'portrait')
@@ -121,7 +125,7 @@ class SuratController extends Controller
      */
     public function userDashboard()
     {
-        $surats = Surat::where('user_id', auth()->id())
+        $surats = Surat::where('user_id', Auth::id())
             ->with(['jenis', 'logs'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -139,7 +143,7 @@ class SuratController extends Controller
         $surat = Surat::with('details', 'jenis')->findOrFail($id);
 
         // Check ownership
-        if ($surat->user_id !== auth()->id()) {
+        if ($surat->user_id !== Auth::id()) {
             abort(403, 'Unauthorized');
         }
 
@@ -148,19 +152,29 @@ class SuratController extends Controller
             abort(403, 'Surat belum disetujui admin');
         }
 
-        $view = in_array($surat->jenis->slug, [
+        $view = $this->getPdfView($surat);
+
+        return Pdf::loadView($view, compact('surat'))
+            ->setPaper('A4', 'portrait')
+            ->download('surat-' . $surat->no_surat . '.pdf');
+    }
+
+    /**
+     * Get PDF view template name
+     */
+    private function getPdfView(Surat $surat)
+    {
+        $specificTemplates = [
             'surat-keterangan-kelahiran',
             'surat-keterangan-kematian',
             'surat-keterangan-kepemilikan-rumah',
             'surat-keterangan-usaha',
             'surat-keterangan-keluarga',
-        ])
+        ];
+
+        return in_array($surat->jenis->slug, $specificTemplates)
             ? 'components.' . $surat->jenis->slug
             : 'components.umum';
-
-        return Pdf::loadView($view, compact('surat'))
-            ->setPaper('A4', 'portrait')
-            ->download('surat-' . $surat->no_surat . '.pdf');
     }
 
 }

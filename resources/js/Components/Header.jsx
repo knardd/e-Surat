@@ -1,4 +1,5 @@
 import { Link } from "@inertiajs/react";
+import { LogOut } from "lucide-react";
 
 const Header = () => {
     return (
@@ -26,6 +27,13 @@ const Header = () => {
 
                     {/*Right Side - Optional Nav */}
                     <div className="flex items-center gap-4">
+                        <Link
+                            href="/"
+                            className="flex gap-2 items-center bg-red-100 text-red-600 px-3 py-2 rounded-lg"
+                        >
+                            <LogOut className="w-5 h-5" />
+                            <span>Logout</span>
+                        </Link>
                         <div className="hidden md:flex items-center gap-2 text-sm text-text-muted">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"

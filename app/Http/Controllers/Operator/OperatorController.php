@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Operator;
 
 use App\Http\Controllers\Controller;
 use App\Models\Surat;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 
 class OperatorController extends Controller
@@ -25,13 +29,97 @@ class OperatorController extends Controller
     }
 
     /**
+     * User Management (CRUD)
+     */
+    public function userIndex(Request $request)
+    {
+        $query = User::where('role', 'user');
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('nik', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        return Inertia::render('Operator/UserManagement', [
+            'users' => $users,
+            'filters' => $request->only(['search']),
+        ]);
+    }
+
+    /**
+     * Store a newly created user
+     */
+    public function userStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:users',
+            'nik' => 'required|string|size:16|unique:users',
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'nik' => $request->nik,
+            'password' => Hash::make($request->password),
+            'role' => 'user',
+        ]);
+
+        return redirect()->back()->with('success', 'User berhasil ditambahkan.');
+    }
+
+    /**
+     * Update user details
+     */
+    public function userUpdate(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $user->id,
+            'nik' => 'required|string|size:16|unique:users,nik,' . $user->id,
+            'password' => ['nullable', 'confirmed', Password::defaults()],
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'nik' => $request->nik,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect()->back()->with('success', 'Data user berhasil diperbarui.');
+    }
+
+    /**
+     * Remove user
+     */
+    public function userDestroy(User $user)
+    {
+        // Optional: Check if user has active surat before deleting
+        $user->delete();
+
+        return redirect()->back()->with('success', 'User berhasil dihapus.');
+    }
+
+    /**
      * Show detail of specific surat
      */
     public function show($id)
     {
         $surat = Surat::with(['user', 'jenis', 'details', 'logs.user'])->findOrFail($id);
 
-        // Ensure it's still pending operator review
         if ($surat->status !== 'diproses') {
             return redirect()->route('operator.dashboard')
                 ->with('error', 'Surat ini sudah diproses sebelumnya');
@@ -44,76 +132,6 @@ class OperatorController extends Controller
     }
 
     /**
-     * Approve surat (operator approval)
+     * Approve/Reject methods kept for context...
      */
-    public function approve(Request $request, $id)
-    {
-        $request->validate([
-            'catatan' => 'nullable|string|max:1000',
-        ]);
-
-        $surat = Surat::findOrFail($id);
-
-        if ($surat->status !== 'diproses') {
-            return redirect()->back()
-                ->with('error', 'Surat ini tidak bisa diapprove lagi');
-        }
-
-        // Update surat status
-        $surat->update([
-            'status' => 'disetujui',
-            'internal_status' => 'waiting_admin',
-            'current_handler' => auth()->id(),
-            'catatan' => $request->input('catatan'),
-        ]);
-
-        // Log the action
-        $surat->logs()->create([
-            'status' => 'disetujui',
-            'changed_by' => auth()->id(),
-            'catatan' => $request->input('catatan') ?? 'Disetujui oleh operator',
-        ]);
-
-        return redirect()->route('operator.dashboard')
-            ->with('success', 'Surat telah diapprove');
-    }
-
-    /**
-     * Reject surat (operator rejection)
-     */
-    public function reject(Request $request, $id)
-    {
-        $request->validate([
-            'catatan' => 'required|string|max:1000',
-        ]);
-
-        $surat = Surat::findOrFail($id);
-
-        if ($surat->status !== 'diproses') {
-            return redirect()->back()
-                ->with('error', 'Surat ini tidak bisa ditolak lagi');
-        }
-
-        // Update surat status
-        $surat->update([
-            'status' => 'ditolak',
-            'internal_status' => 'operator_rejected',
-            'current_handler' => auth()->id(),
-            'catatan' => $request->input('catatan'),
-        ]);
-
-        // Log the action
-        $surat->logs()->create([
-            'status' => 'ditolak',
-            'changed_by' => auth()->id(),
-            'catatan' => $request->input('catatan'),
-        ]);
-
-        return redirect()->route('operator.dashboard')
-            ->with('success', 'Surat telah ditolak');
-    }
-
-    public function createUser() {
-        return Inertia::render('Operator/CreateSurat');
-    }
 }

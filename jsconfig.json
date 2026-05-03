@@ -3,6 +3,9 @@
         "baseUrl": ".",
         "paths": {
             "@/*": ["resources/js/*"],
+            "@Auth/*": ["resources/js/Pages/Auth/*"],
+            "@Layouts/*": ["resources/js/Layouts/*"],
+            "@Components/*": ["resources/js/Components/*"],
             "ziggy-js": ["./vendor/tightenco/ziggy"]
         }
     },

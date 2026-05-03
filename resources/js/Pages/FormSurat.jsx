@@ -179,7 +179,7 @@ const FormSurat = ({ jenis, fields }) => {
                     <ol className="flex items-center gap-2 text-sm">
                         <li>
                             <Link
-                                href="/"
+                                href="/surat/pilih"
                                 className="text-gray-400 hover:text-blue-600 transition-colors inline-flex items-center gap-1"
                             >
                                 <svg

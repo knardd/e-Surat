@@ -17,7 +17,7 @@ Route::get('/', function () {
 });
 
 // Admin Routes
-Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/cekSurat', [AdminController::class, 'cekSurat'])->name('admin.cekSurat');
     Route::get('/admin/surat/{id}', [AdminController::class, 'show'])->name('admin.show');
@@ -26,12 +26,17 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
 });
 
 // Operator Routes
-Route::middleware(['auth', 'verified', 'role:operator'])->group(function () {
+Route::middleware(['auth', 'role:operator'])->group(function () {
     Route::get('/operator/dashboard', [OperatorController::class, 'index'])->name('operator.dashboard');
     Route::get('/operator/surat/{id}', [OperatorController::class, 'show'])->name('operator.show');
     Route::post('/operator/surat/{id}/approve', [OperatorController::class, 'approve'])->name('operator.approve');
     Route::post('/operator/surat/{id}/reject', [OperatorController::class, 'reject'])->name('operator.reject');
-    Route::get('/operator/createSurat', [OperatorController::class, 'createUser'])->name('operator.createSurat');
+    
+    // User Management for Operator
+    Route::get('/operator/users', [OperatorController::class, 'userIndex'])->name('operator.users.index');
+    Route::post('/operator/users', [OperatorController::class, 'userStore'])->name('operator.users.store');
+    Route::patch('/operator/users/{user}', [OperatorController::class, 'userUpdate'])->name('operator.users.update');
+    Route::delete('/operator/users/{user}', [OperatorController::class, 'userDestroy'])->name('operator.users.destroy');
 });
 
 // User Routes (authenticated)
@@ -43,13 +48,13 @@ Route::middleware('auth')->group(function () {
     // User surat dashboard
     Route::get('/user/dashboard', [SuratController::class, 'userDashboard'])->name('user.dashboard');
     Route::get('/surat/download/{id}', [SuratController::class, 'download'])->name('surat.download');
-});
 
-// Public Surat Routes
-Route::get('/surat/pilih', [SuratController::class, 'pilih'])->name('surat.pilih');
-Route::get('/surat/form/{jenis:slug}', [SuratController::class, 'form'])->name('surat.form');
-Route::post('/surat/proses', [SuratController::class, 'proses'])->name('surat.proses');
-Route::get('/surat/success/{id}', [SuratController::class, 'success'])->name('surat.success');
-Route::get('/surat/pdf/{id}', [SuratController::class, 'pdf'])->name('surat.pdf');
+    // Surat processing routes (authenticated)
+    Route::get('/surat/pilih', [SuratController::class, 'pilih'])->name('surat.pilih');
+    Route::get('/surat/form/{jenis:slug}', [SuratController::class, 'form'])->name('surat.form');
+    Route::post('/surat/proses', [SuratController::class, 'proses'])->name('surat.proses');
+    Route::get('/surat/success/{id}', [SuratController::class, 'success'])->name('surat.success');
+    Route::get('/surat/pdf/{id}', [SuratController::class, 'pdf'])->name('surat.pdf');
+});
 
 require __DIR__.'/auth.php';

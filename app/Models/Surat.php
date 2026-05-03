@@ -9,7 +9,6 @@ class Surat extends Model
     protected $fillable = [
         'user_id',
         'jenis_id',
-        'detail',
         'status',
         'internal_status',
         'current_handler',
@@ -19,7 +18,6 @@ class Surat extends Model
         'no_surat',
         'tanggal_surat',
         'no_urut',
-        
     ];
 
     public function user()
@@ -54,11 +52,16 @@ class Surat extends Model
 
     public function getDetailMapAttribute()
     {
-    $orderedKeys = array_keys(config('surat_fields.' . $this->jenis->slug . '.fields'));
+        $config = config('surat_fields.' . $this->jenis->slug . '.fields');
+        
+        if (!$config) {
+            return $this->details()->pluck('value', 'key')->toArray();
+        }
 
-    $details = $this->details()->pluck('value', 'key')->toArray();
+        $orderedKeys = array_keys($config);
+        $details = $this->details()->pluck('value', 'key')->toArray();
 
-    return array_replace(array_flip($orderedKeys), $details);
+        return array_replace(array_flip($orderedKeys), $details);
     }
 
     public function getDetailPemilikUsahaAttribute()
@@ -158,18 +161,20 @@ class Surat extends Model
 }
 
     public function isiFormatted()
-{
-    if (!$this->jenis) {
-        return '';
+    {
+        if (!$this->jenis || empty($this->jenis->isi)) {
+            return '';
+        }
+
+        $detail = $this->detail_map;
+        $isi = $this->jenis->isi;
+
+        // Automatically replace all placeholders {field_name} with their values
+        foreach ($detail as $key => $value) {
+            $isi = str_replace('{' . $key . '}', $value, $isi);
+        }
+
+        return $isi;
     }
-
-    $detail = $this->detail_map;
-
-    return str_replace(
-        ['{alamat_rumah}', '{luas_tanah}', '{luas_bangunan}'],
-        [$detail['alamat_rumah'], $detail['luas_tanah'], $detail['luas_bangunan']],
-        $this->jenis->isi
-    );
-}
 
 }
